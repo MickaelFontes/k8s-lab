@@ -17,21 +17,21 @@ resource "google_compute_subnetwork" "subnet" {
   name                     = local.subnet_name
   ip_cidr_range            = "10.10.0.0/16"
   region                   = var.region
-  network                  = google_compute_network.vpc.name
+  network                  = google_compute_network.vpc.id
   private_ip_google_access = true
 }
 
 resource "google_compute_route" "egress_internet" {
   name             = "${var.network_name}-egress-internet-public"
   dest_range       = "0.0.0.0/0"
-  network          = google_compute_network.vpc.name
+  network          = google_compute_network.vpc.id
   next_hop_gateway = "default-internet-gateway"
 }
 
 resource "google_compute_router" "router" {
   name    = "${local.network_name}-router"
   region  = google_compute_subnetwork.subnet.region
-  network = google_compute_network.vpc.name
+  network = google_compute_network.vpc.id
 }
 
 resource "google_compute_router_nat" "nat_router" {
@@ -55,7 +55,7 @@ resource "google_compute_router_nat" "nat_router" {
 // Deny all other connections.
 resource "google_compute_firewall" "gke-deny-all-from-anywhere" {
   name          = "${var.network_name}-gke-deny-all-from-anywhere"
-  network       = local.network_name
+  network       = google_compute_network.vpc.self_link
   direction     = "INGRESS"
   project       = var.project_id
   source_ranges = ["0.0.0.0/0"]
@@ -69,7 +69,7 @@ resource "google_compute_firewall" "gke-deny-all-from-anywhere" {
 // Allow known connections.
 resource "google_compute_firewall" "gke-allow-known" {
   name      = "${var.network_name}-gke-allow-known"
-  network   = local.network_name
+  network   = google_compute_network.vpc.self_link
   direction = "INGRESS"
   project   = var.project_id
   source_ranges = keys(var.authorized_ipv4_cidr_blocks)

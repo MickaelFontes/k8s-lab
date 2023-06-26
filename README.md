@@ -12,9 +12,11 @@ The goald of this repo is to provide the necessary files and documentation to ea
 
 ## Setup of the GCP project
 
-Activate the following APIs
+Execute this command with your newly created project ID:
 
-* 
+```bash
+./init.sh $PROJECT_ID
+```
 
 Create the Terraform State Bucket
 

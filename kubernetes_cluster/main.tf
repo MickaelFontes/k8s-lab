@@ -2,6 +2,7 @@ resource "google_container_cluster" "app_cluster" {
   name     = var.cluster_name
   location = var.region
   provider = google-beta // for protect_config block
+  project  = var.project_id
 
   cluster_autoscaling {
     enabled = false
@@ -75,6 +76,10 @@ resource "google_container_cluster" "app_cluster" {
     }
     workload_vulnerability_mode = "BASIC" # DISABLED or BASIC
   }
+
+  workload_identity_config {
+     workload_pool = "${var.project_id}.svc.id.goog"
+  }
 }
 
 resource "google_container_node_pool" "app_cluster_linux_node_pool" {
@@ -82,7 +87,7 @@ resource "google_container_node_pool" "app_cluster_linux_node_pool" {
   location       = google_container_cluster.app_cluster.location
   node_locations = var.node_zones
   cluster        = google_container_cluster.app_cluster.name
-  node_count     = 0
+  node_count     = 1
 
   max_pods_per_node = 100
 
@@ -92,7 +97,7 @@ resource "google_container_node_pool" "app_cluster_linux_node_pool" {
   }
 
   node_config {
-    machine_type = "e2-standard-4"
+    machine_type = "e2-medium"
     preemptible  = true # For lower cost
     disk_size_gb = 40
 

@@ -36,6 +36,7 @@ module "google_networks" {
 
 module "google_kubernetes_cluster" {
   source = "./kubernetes_cluster"
+  depends_on = [module.google_networks, module.gke_iam]
 
   project_id                  = var.project_id
   region                      = var.region
