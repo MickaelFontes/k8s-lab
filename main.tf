@@ -39,7 +39,7 @@ module "google_kubernetes_cluster" {
   depends_on = [module.google_networks, module.gke_iam]
 
   project_id                  = var.project_id
-  region                      = var.region
+  main_zone                   = var.main_zone
   cluster_name                = var.cluster_name
   node_zones                  = var.cluster_node_zones
   service_account             = module.gke_iam.serviceAccount.email

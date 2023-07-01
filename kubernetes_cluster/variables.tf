@@ -4,10 +4,10 @@ variable "project_id" {
   default = "my-project"
 }
 
-variable "region" {
+variable "main_zone" {
   type = string
-  description = "The region to use"
-  default = "us-east1"
+  description = "The zone to use"
+  default = "us-east1-b"
 }
 
 variable "node_zones" {

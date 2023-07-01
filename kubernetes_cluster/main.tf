@@ -1,6 +1,6 @@
 resource "google_container_cluster" "app_cluster" {
   name     = var.cluster_name
-  location = var.region
+  location = var.main_zone  #only zonal cluster is in free tier
   provider = google-beta // for protect_config block
   project  = var.project_id
 
@@ -47,7 +47,7 @@ resource "google_container_cluster" "app_cluster" {
   }
 
   release_channel {
-    channel = "STABLE"
+    channel = "RAPID"
   }
 
   addons_config {
