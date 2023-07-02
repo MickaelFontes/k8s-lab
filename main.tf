@@ -40,13 +40,15 @@ module "google_kubernetes_cluster" {
 
   project_id                  = var.project_id
   main_zone                   = var.main_zone
+  region                      = var.region
   cluster_name                = var.cluster_name
   node_zones                  = var.cluster_node_zones
   service_account             = module.gke_iam.serviceAccount.email
   network_name                = module.google_networks.network.name
   subnet_name                 = module.google_networks.subnet.name
-  master_ipv4_cidr_block      = module.google_networks.cluster_master_ip_cidr_range
-  pods_ipv4_cidr_block        = module.google_networks.cluster_pods_ip_cidr_range
-  services_ipv4_cidr_block    = module.google_networks.cluster_services_ip_cidr_range
+  master_ipv4_cidr_blocks     = module.google_networks.cluster_master_ip_cidr_ranges
+  pods_ipv4_cidr_blocks       = module.google_networks.cluster_pods_ip_cidr_ranges
+  services_ipv4_cidr_blocks   = module.google_networks.cluster_services_ip_cidr_ranges
   authorized_ipv4_cidr_blocks = var.control_plane_authorized_ipv4
+  enable_autopilot            = var.enable_autopilot
 }

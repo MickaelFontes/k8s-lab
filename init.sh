@@ -11,6 +11,7 @@ gcloud auth login
 gcloud auth application-default
 gcloud config set project ${PROJECT_ID}
 gcloud services enable container.googleapis.com
+gcloud services enable containersecurity.googleapis.com
 gcloud services enable storage.googleapis.com
 gcloud services enable cloudresourcemanager.googleapis.com # to edit iam policies
 

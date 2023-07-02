@@ -1,9 +1,9 @@
 locals {
   network_name                   = "kubernetes-${var.network_name}"
   subnet_name                    = "${google_compute_network.vpc.name}--subnet"
-  cluster_master_ip_cidr_range   = "10.100.100.0/28"
-  cluster_pods_ip_cidr_range     = "10.101.0.0/16"
-  cluster_services_ip_cidr_range = "10.102.0.0/16"
+  cluster_master_ip_cidr_ranges   = ["10.100.100.0/28", "10.100.101.0/28"]
+  cluster_pods_ip_cidr_ranges     = ["10.101.0.0/16", "10.102.0.0/16"] // to avoid conflict when changing cluster type
+  cluster_services_ip_cidr_ranges = ["10.103.0.0/16", "10.104.0.0/16"]
 }
 
 resource "google_compute_network" "vpc" {

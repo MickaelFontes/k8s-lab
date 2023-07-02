@@ -4,6 +4,12 @@ variable "project_id" {
   default = "my-project"
 }
 
+variable "region" {
+  type = string
+  description = "The region to use"
+  default = "us-east1"
+}
+
 variable "main_zone" {
   type = string
   description = "The zone to use"
@@ -36,14 +42,14 @@ variable "service_account" {
   description = "The service account to use"
 }
 
-variable "pods_ipv4_cidr_block" {
-  type = string
-  description = "The CIDR block to use for pod IPs"
+variable "pods_ipv4_cidr_blocks" {
+  type = list(string)
+  description = "The CIDR blocks to use for pod IPs"
 }
 
-variable "services_ipv4_cidr_block" {
-  type = string
-  description = "The CIDR block to use for the service IPs"
+variable "services_ipv4_cidr_blocks" {
+  type = list(string)
+  description = "The CIDR blocks to use for the service IPs"
 }
 
 variable "authorized_ipv4_cidr_blocks" {
@@ -52,7 +58,13 @@ variable "authorized_ipv4_cidr_blocks" {
   default = null
 }
 
-variable "master_ipv4_cidr_block" {
-  type = string
-  description = "The /28 CIDR block to use for the master IPs"
+variable "master_ipv4_cidr_blocks" {
+  type = list(string)
+  description = "The /28 CIDR blocks to use for the master IPs"
+}
+
+variable "enable_autopilot" {
+  type        = bool
+  description = "To deploy an autopilot cluster or not"
+  default     = false
 }

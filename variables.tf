@@ -35,3 +35,9 @@ variable "control_plane_authorized_ipv4" {
   "1.2.3.4/32": "home"
   }
 }
+
+variable "enable_autopilot" {
+  type        = bool
+  description = "To deploy an autopilot cluster or not"
+  default     = false
+}
