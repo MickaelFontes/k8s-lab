@@ -1,8 +1,9 @@
 locals {
   network_name                   = "kubernetes-${var.network_name}"
   subnet_name                    = "${google_compute_network.vpc.name}--subnet"
+  # two ranges to avoid conflict when changing cluster type
   cluster_master_ip_cidr_ranges   = ["10.100.100.0/28", "10.100.101.0/28"]
-  cluster_pods_ip_cidr_ranges     = ["10.101.0.0/16", "10.102.0.0/16"] // to avoid conflict when changing cluster type
+  cluster_pods_ip_cidr_ranges     = ["10.101.0.0/16", "10.102.0.0/16"]
   cluster_services_ip_cidr_ranges = ["10.103.0.0/16", "10.104.0.0/16"]
 }
 
@@ -52,7 +53,7 @@ resource "google_compute_router_nat" "nat_router" {
   }
 }
 
-// Deny all other connections.
+# Deny all other connections.
 resource "google_compute_firewall" "gke-deny-all-from-anywhere" {
   name          = "${var.network_name}-gke-deny-all-from-anywhere"
   network       = google_compute_network.vpc.self_link
@@ -66,7 +67,7 @@ resource "google_compute_firewall" "gke-deny-all-from-anywhere" {
   }
 }
 
-// Allow known connections.
+# Allow known connections.
 resource "google_compute_firewall" "gke-allow-known" {
   name      = "${var.network_name}-gke-allow-known"
   network   = google_compute_network.vpc.self_link

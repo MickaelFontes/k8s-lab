@@ -2,17 +2,17 @@ resource "google_container_cluster" "app_cluster" {
   count = var.enable_autopilot ? 0 : 1
 
   name     = var.cluster_name
-  location = var.main_zone  #only zonal cluster is in free tier
-  provider = google-beta // for protect_config block
+  location = var.main_zone  # only zonal cluster is in free tier
+  provider = google-beta # for protect_config block
   project  = var.project_id
 
   cluster_autoscaling {
     enabled = false
   }
 
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
+  /* We can't create a cluster with no node pool defined, but we want to only use
+  separately managed node pools. So we create the smallest possible default
+  node pool and immediately delete it. */
   remove_default_node_pool = true
   initial_node_count       = 1
 
@@ -31,7 +31,7 @@ resource "google_container_cluster" "app_cluster" {
     }
   }
 
-  // Restrict external access to control plane
+  # Restrict external access to control plane
   master_authorized_networks_config {
   dynamic "cidr_blocks" {
     for_each = var.authorized_ipv4_cidr_blocks
@@ -53,7 +53,7 @@ resource "google_container_cluster" "app_cluster" {
   }
 
   addons_config {
-    // TODO: Enable network policy (Calico)
+    # TODO: Enable network policy (Calico)
     network_policy_config {
       disabled = false
     }
@@ -65,13 +65,13 @@ resource "google_container_cluster" "app_cluster" {
     enabled = "true"
   }
 
-  // service_external_ips_config enabled by default
+  # service_external_ips_config enabled by default
 
-  // Optionals (already set by default)
+  # Optionals (already set by default)
   enable_shielded_nodes = true
   enable_legacy_abac = false
 
-  // only in google-beta provider
+  # only in google-beta provider
   protect_config {
     workload_config {
       audit_mode = "BASIC" # DISABLED or BASIC
@@ -119,15 +119,15 @@ resource "google_container_node_pool" "app_cluster_linux_node_pool" {
       enable_integrity_monitoring = true
     }
 
-    // Enable workload identity on this node pool.
+    # Enable workload identity on this node pool.
     workload_metadata_config {
       node_metadata = "GKE_METADATA_SERVER"
     }
 
     metadata = {
-      // Set metadata on the VM to supply more entropy.
+      # Set metadata on the VM to supply more entropy.
       google-compute-enable-virtio-rng = "true"
-      // Explicitly remove GCE legacy metadata API endpoint.
+      # Explicitly remove GCE legacy metadata API endpoint.
       disable-legacy-endpoints = "true"
     }
   }
@@ -139,8 +139,8 @@ resource "google_container_cluster" "autopilot_cluster" {
 
   enable_autopilot = true
   name     = var.cluster_name
-  location = var.region  // only regional cluster in Autopilot
-  provider = google-beta // for protect_config block
+  location = var.region  # only regional cluster in Autopilot
+  provider = google-beta # for protect_config block
   project  = var.project_id
 
   ip_allocation_policy {
@@ -158,7 +158,7 @@ resource "google_container_cluster" "autopilot_cluster" {
     }
   }
 
-  // Restrict external access to control plane
+  # Restrict external access to control plane
   master_authorized_networks_config {
   dynamic "cidr_blocks" {
     for_each = var.authorized_ipv4_cidr_blocks
@@ -182,13 +182,14 @@ resource "google_container_cluster" "autopilot_cluster" {
   /* Network policiy enforcement cannot be disable in Autopilot
   No setting needed */
 
-  // service_external_ips_config enabled by default
+  # service_external_ips_config enabled by default
 
-  // Optionals (already set by default)
-  // Autopilot => cannot change enable_shielded_nodes
+  # Optionals (already set by default)
+
+  # Autopilot => cannot change enable_shielded_nodes
   enable_legacy_abac = false
 
-  // only in google-beta provider
+  # only in google-beta provider
   protect_config {
     workload_config {
       audit_mode = "BASIC" # DISABLED or BASIC

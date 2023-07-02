@@ -20,22 +20,23 @@ provider "google" {
 module "gke_iam" {
   source = "./gke_iam"
 
-  project_id     = var.project_id
-  cluster_name   = var.cluster_name
-  iam_roles_list = ["roles/logging.logWriter", "roles/monitoring.metricWriter", "roles/monitoring.viewer", "roles/stackdriver.resourceMetadata.writer"] # see https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa or roles/container.nodeServiceAccount
+  project_id   = var.project_id
+  cluster_name = var.cluster_name
+  # see https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa or roles/container.nodeServiceAccount
+  iam_roles_list = ["roles/logging.logWriter", "roles/monitoring.metricWriter", "roles/monitoring.viewer", "roles/stackdriver.resourceMetadata.writer"]
 }
 
 module "google_networks" {
   source = "./networks"
 
-  project_id   = var.project_id
-  network_name = var.cluster_name
-  region       = var.region
+  project_id                  = var.project_id
+  network_name                = var.cluster_name
+  region                      = var.region
   authorized_ipv4_cidr_blocks = var.control_plane_authorized_ipv4
 }
 
 module "google_kubernetes_cluster" {
-  source = "./kubernetes_cluster"
+  source     = "./kubernetes_cluster"
   depends_on = [module.google_networks, module.gke_iam]
 
   project_id                  = var.project_id
